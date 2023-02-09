@@ -1,0 +1,154 @@
+public class percolation {
+    int[][] grid;
+    int size;
+
+    // creates n-by-n grid, with all sites initially blocked
+    public percolation(int n) {
+        size = n;
+        grid = new int[n][n];
+        for (int x = 0; x < n; x++) {
+            for (int y = 0; y < n; y++) {
+                grid[x][y] = -1;
+            }
+        }
+    }
+
+    // opens the site (row, col) if it is not open already
+    public void open(int row, int col) {
+        boolean isolated = true;
+
+        //north
+        if (row - 1 >= 0 && grid[row - 1][col] != -1) {
+            isolated = false;
+            if (grid[row][col] != -1) {
+                int val = grid[row][col];
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        if (grid[i][j] == val) {
+                            grid[i][j] = grid[row - 1][col];
+                        }
+                    }
+                }
+            } else {
+                grid[row][col] = grid[row - 1][col];
+            }
+        }
+        //west
+        if (col - 1 >= 0 && grid[row][col - 1] != -1) {
+            isolated = false;
+            if (grid[row][col] != -1) {
+                int val = grid[row][col];
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        if (grid[i][j] == val) {
+                            grid[i][j] = grid[row][col - 1];
+                        }
+                    }
+                }
+            } else {
+                grid[row][col] = grid[row][col - 1];
+            }
+        }
+        //east
+        if (col + 1 < size && grid[row][col + 1] != -1) {
+            isolated = false;
+            if (grid[row][col] != -1) {
+                int val = grid[row][col];
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        if (grid[i][j] == val) {
+                            grid[i][j] = grid[row][col + 1];
+                        }
+                    }
+                }
+            } else {
+                grid[row][col] = grid[row][col + 1];
+            }
+        }
+        //south
+        if (row + 1 < size && grid[row + 1][col] != -1) {
+            isolated = false;
+            if (grid[row][col] != -1) {
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        if (grid[i][j] == grid[row][col]) {
+                            grid[i][j] = grid[row + 1][col];
+                        }
+                    }
+                }
+            } else {
+                grid[row][col] = grid[row + 1][col];
+            }
+        }
+        //no open
+        if (isolated == true) {
+            grid[row][col] = (size * row) + col;
+        }
+    }
+
+    // is the site (row, col) open?
+    public boolean isOpen(int row, int col) {
+        if (grid[row][col] != 1) {
+            return (false);
+        } else {
+            return (true);
+        }
+    }
+
+    // is the site (row, col) full?
+    public boolean isFull(int row, int col) {
+        int leader = grid[row][col];
+
+        for (int i = 0; i < size; i++) {
+            if (leader == grid[0][i]) {
+                return (true);
+            }
+        }
+
+        return (false);
+
+    }
+
+    // returns the number of open sites
+    public int numberOfOpenSites() {
+        int num_open = 0;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[i][j] != -1) {
+                    num_open = num_open + 1;
+                }
+            }
+        }
+
+        return num_open;
+
+    }
+
+    // does the system percolate?
+    public boolean percolates() {
+        for (int i = 0; i < size; i++) {
+            if (grid[size - 1][i] != -1 && isFull(size - 1, i) == true) {
+                return (true);
+            }
+        }
+        return (false);
+
+    }
+
+    public void toStringy() {
+        String row = "";
+        for (int i = 0; i < size; i = i + 1) {
+            for (int j = 0; j < size; j = j + 1) {
+                row = row + "  " + grid[i][j];
+            }
+            System.out.println(row);
+            row = "";
+        }
+    }
+
+    // unit testing (required)
+    public static void main(String[] args) {
+
+    }
+}
